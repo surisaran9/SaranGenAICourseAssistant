@@ -8,6 +8,7 @@ import streamlit as st
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 import logging
 from langchain_cohere import CohereEmbeddings
@@ -40,12 +41,14 @@ if __name__ == "__main__":
 
             #embedding_function = OpenAIEmbeddings()
             embedding_function = CohereEmbeddings(model="embed-english-v3.0",)
-            persistent_path = "./data/vectorstore"
-            vectorstore = Chroma.from_documents(
-                documents=splits,
-                embedding=embedding_function,
-                persist_directory=persistent_path
-            )
+            #persistent_path = "./data/vectorstore"
+            # vectorstore = Chroma.from_documents(
+            #     documents=splits,
+            #     embedding=embedding_function,
+            #     persist_directory=persistent_path
+            # )
+
+            vectorstore = FAISS.from_documents(splits, embedding_function)
 
             return vectorstore
         except Exception as e:
